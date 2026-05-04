@@ -6,12 +6,12 @@
 
 @layer base {
   html {
-    background-color: #ffffff;
     font-family: "Avenir Next", "Segoe UI", sans-serif;
+    scrollbar-gutter: stable;
   }
 
   body {
-    @apply min-h-screen bg-white text-zinc-800 antialiased;
+    @apply min-h-screen bg-slate-50 text-zinc-800 antialiased;
   }
 
   #root {
@@ -48,5 +48,43 @@
 
   .action-button {
     @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .result-overlay {
+    animation: result-overlay-enter 180ms ease-out;
+  }
+
+  .result-modal {
+    animation: result-modal-enter 500ms cubic-bezier(0.18, 0.9, 0.24, 1);
+    transform-origin: center bottom;
+  }
+}
+
+@keyframes result-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes result-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-overlay,
+  .result-modal {
+    animation: none;
   }
 }

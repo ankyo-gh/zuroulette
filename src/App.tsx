@@ -21,8 +21,10 @@ const TEXT = {
   title: "ズルーレット",
   target: "ターゲット項目",
   result: "結果",
+  resultCaption: "選ばれた項目",
   spin: "スタート",
   spinning: "回転中...",
+  revealing: "終了",
   reset: "リセット",
   items: "項目",
   addItem: "項目を追加",
@@ -30,6 +32,7 @@ const TEXT = {
   none: "未選択",
   pending: "\u2014",
   delete: "削除",
+  close: "閉じる",
 };
 
 const COLOR_PRESETS = [
@@ -51,6 +54,8 @@ const DEFAULT_ITEMS: RouletteItem[] = [
   { id: "dflt-5", label: "", color: "#457b9d" },
   { id: "dflt-6", label: "", color: "#7b2cbf" },
 ];
+
+const RESULT_REVEAL_DELAY_MS = 320;
 
 function createItem(label: string, color: string): RouletteItem {
   return {
@@ -121,6 +126,7 @@ function App() {
     easing: "linear",
   });
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isResultPending, setIsResultPending] = useState(false);
   const timeoutIdsRef = useRef<number[]>([]);
 
   useEffect(() => {
@@ -133,7 +139,12 @@ function App() {
 
   const segmentAngle = 360 / items.length;
   const targetIndex = items.findIndex((item) => item.id === targetId);
-  const canSpin = items.length > 1 && targetIndex >= 0 && !isSpinning;
+  const resultIndex = resultId
+    ? items.findIndex((item) => item.id === resultId)
+    : -1;
+  const resultItem = resultIndex >= 0 ? items[resultIndex] : null;
+  const isBusy = isSpinning || isResultPending;
+  const canSpin = items.length > 1 && targetIndex >= 0 && !isBusy;
 
   function clearSpinTimers() {
     timeoutIdsRef.current.forEach((timeoutId) => {
@@ -146,6 +157,27 @@ function App() {
     const timeoutId = window.setTimeout(step, delayMs);
     timeoutIdsRef.current.push(timeoutId);
   }
+
+  useEffect(() => {
+    if (!resultItem) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setResultId(null);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [resultItem]);
 
   function updateItem(id: string, patch: Partial<RouletteItem>) {
     setItems((currentItems) =>
@@ -195,6 +227,11 @@ function App() {
     setRotation(0);
     setMotion({ durationMs: 0, easing: "linear" });
     setIsSpinning(false);
+    setIsResultPending(false);
+  }
+
+  function closeResultModal() {
+    setResultId(null);
   }
 
   function spinRiggedWheel() {
@@ -224,6 +261,7 @@ function App() {
       shortestRotationDelta(stageOneRotation, forcedAlignment);
 
     setIsSpinning(true);
+    setIsResultPending(false);
     setResultId(null);
     setMotion({
       durationMs: forwardDurationMs,
@@ -241,10 +279,21 @@ function App() {
 
     schedule(
       () => {
-        setResultId(targetId);
         setIsSpinning(false);
+        setIsResultPending(true);
       },
       forwardDurationMs - reverseLeadMs + reverseDurationMs,
+    );
+
+    schedule(
+      () => {
+        setResultId(targetId);
+        setIsResultPending(false);
+      },
+      forwardDurationMs -
+        reverseLeadMs +
+        reverseDurationMs +
+        RESULT_REVEAL_DELAY_MS,
     );
   }
 
@@ -263,7 +312,7 @@ function App() {
           <section className="panel relative overflow-hidden px-5 py-6 sm:px-7 sm:py-7">
             <div className="relative mx-auto aspect-square w-full max-w-140">
               <div className="absolute left-1/2 -top-1 z-20 -translate-x-1/2">
-                <div className="mx-auto -mt-1 h-0 w-0 border-x-18 border-t-34 border-x-transparent border-t-red-500" />
+                <div className="mx-auto -mt-1 h-0 w-0 border-x-18 border-t-34 border-x-transparent border-t-red-500 drop-shadow-lg" />
               </div>
 
               <div className="absolute inset-0 rounded-full bg-stone-200" />
@@ -347,9 +396,15 @@ function App() {
                 disabled={!canSpin}
                 className="action-button bg-slate-600 px-6 text-white hover:bg-slate-700 items-center gap-2 text-xl"
               >
-                {isSpinning ? null : <PlayIcon size={20} weight="fill" />}
+                {isBusy ? null : <PlayIcon size={20} weight="fill" />}
 
-                <span>{isSpinning ? TEXT.spinning : TEXT.spin}</span>
+                <span>
+                  {isSpinning
+                    ? TEXT.spinning
+                    : isResultPending
+                      ? TEXT.revealing
+                      : TEXT.spin}
+                </span>
               </button>
             </div>
           </section>
@@ -372,7 +427,7 @@ function App() {
                             onChange={(event) =>
                               updateItem(item.id, { label: event.target.value })
                             }
-                            disabled={isSpinning}
+                            disabled={isBusy}
                             className="field"
                             placeholder={`${index + 1}`}
                           />
@@ -386,7 +441,7 @@ function App() {
                             onChange={(event) =>
                               updateItem(item.id, { color: event.target.value })
                             }
-                            disabled={isSpinning}
+                            disabled={isBusy}
                             aria-label={`${getLabel(item, index)} ${TEXT.color}`}
                           />
                         </div>
@@ -394,7 +449,7 @@ function App() {
                         <button
                           type="button"
                           onClick={() => removeItem(item.id)}
-                          disabled={isSpinning || items.length <= 2}
+                          disabled={isBusy || items.length <= 2}
                           className="action-button h-11 w-11 p-0 shrink-0 text-lg text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
                           aria-label={`${getLabel(item, index)} ${TEXT.delete}`}
                         >
@@ -408,7 +463,7 @@ function App() {
                   <button
                     type="button"
                     onClick={addItem}
-                    disabled={isSpinning}
+                    disabled={isBusy}
                     className="action-button bg-slate-600 text-white hover:bg-slate-700 items-center gap-2"
                   >
                     <PlusIcon weight="bold" size={16} />
@@ -418,7 +473,7 @@ function App() {
                   <button
                     type="button"
                     onClick={resetItems}
-                    disabled={isSpinning}
+                    disabled={isBusy}
                     className="action-button border border-stone-900/10 bg-white text-stone-700 hover:bg-stone-50"
                   >
                     {TEXT.reset}
@@ -431,7 +486,7 @@ function App() {
                     <select
                       value={targetId}
                       onChange={(event) => setTargetId(event.target.value)}
-                      disabled={isSpinning}
+                      disabled={isBusy}
                       className="field appearance-none pr-11"
                     >
                       {items.map((item, index) => (
@@ -455,7 +510,7 @@ function App() {
                     type="text"
                     value={title}
                     onChange={(event) => setTitle(event.target.value)}
-                    disabled={isSpinning}
+                    disabled={isBusy}
                     className="field"
                     placeholder={TEXT.title}
                   />
@@ -465,6 +520,43 @@ function App() {
           </aside>
         </div>
       </div>
+
+      {resultItem ? (
+        <div
+          className="result-overlay fixed inset-0 z-50 flex items-center justify-center bg-slate-950/45 px-4 py-8"
+          onClick={closeResultModal}
+          role="presentation"
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="result-modal-title"
+            className="result-modal relative w-full max-w-2xl overflow-hidden rounded-4xl bg-white p-6 shadow-2xl sm:p-10"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="relative text-center">
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-slate-500">
+                {TEXT.result}
+              </p>
+
+              <h2
+                id="result-modal-title"
+                className="mt-5 wrap-break-word text-5xl font-black leading-tight sm:text-7xl"
+              >
+                {getLabel(resultItem, resultIndex)}
+              </h2>
+
+              <button
+                type="button"
+                onClick={closeResultModal}
+                className="action-button mt-8 bg-slate-600 px-8 text-white hover:bg-slate-700"
+              >
+                {TEXT.close}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
