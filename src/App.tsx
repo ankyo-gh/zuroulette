@@ -310,7 +310,7 @@ function App() {
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
           <section className="panel relative overflow-hidden px-5 py-6 sm:px-7 sm:py-7">
-            <div className="relative mx-auto aspect-square w-full max-w-140">
+            <div className="pointer-events-none relative mx-auto aspect-square w-full max-w-140 select-none">
               <div className="absolute left-1/2 -top-1 z-20 -translate-x-1/2">
                 <div className="mx-auto -mt-1 h-0 w-0 border-x-18 border-t-34 border-x-transparent border-t-red-500 drop-shadow-lg" />
               </div>
@@ -318,7 +318,7 @@ function App() {
               <div className="absolute inset-0 rounded-full bg-stone-200" />
 
               <div
-                className="absolute inset-0 rounded-full"
+                className="absolute inset-0 overflow-hidden rounded-full"
                 style={{
                   transform: `rotate(${rotation}deg)`,
                   transitionProperty: "transform",
@@ -389,7 +389,7 @@ function App() {
               <div className="absolute inset-[45%] rounded-full bg-white shadow-xl" />
             </div>
 
-            <div className="mt-6 flex justify-center">
+            <div className="relative z-10 mt-6 flex justify-center">
               <button
                 type="button"
                 onClick={spinRiggedWheel}
