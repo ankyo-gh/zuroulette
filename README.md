@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# ズルーレット
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ズルーレットは、露骨にズルいルーレットを誰でも簡単に作れるシングルページアプリです。  
+ターゲット項目を事前に選んでおくと、ルーレットが一度フェイントしてから必ずその項目で停止します。
 
-Currently, two official plugins are available:
+YouTube 配信、飲み会、罰ゲーム決めなどの演出やジョーク用途を想定しています。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 主な機能
 
-## React Compiler
+- 項目名の編集
+- 項目の追加と削除
+- 項目ごとの色変更
+- ターゲット項目の事前選択
+- ルーレットタイトルの変更
+- フェイント付きの停止アニメーション
+- 結果モーダルの表示
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 使い方
 
-## Expanding the ESLint configuration
+1. 初期表示されている項目名を編集します。
+2. 必要に応じて `項目を追加` から候補を増やします。
+3. 色ピッカーで各項目の色を変更します。
+4. `ターゲット項目` で止めたい項目を選択します。
+5. `タイトル` に任意の名前を入力します。
+6. `スタート` を押すと、ルーレットが回転してターゲット項目で停止します。
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 注意
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- このアプリは演出・ジョーク用です。
+- 実際の抽選、有価物を伴う決定、参加者に公平性を期待させる場面では使用しないでください。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 技術スタック
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS v4
+- Phosphor Icons
+- ESLint
+
+## セットアップ
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+開発サーバー起動後、`http://localhost:5173` で確認できます。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 利用可能なスクリプト
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `npm run dev`: 開発サーバーを起動
+- `npm run build`: 本番用にビルド
+- `npm run preview`: ビルド結果をローカルで確認
+- `npm run lint`: ESLint を実行
+
+## ディレクトリ構成
+
+```text
+src/
+  App.tsx      ルーレット UI と停止ロジック
+  index.css    Tailwind CSS とアプリ固有スタイル
+  main.tsx     エントリーポイント
 ```
