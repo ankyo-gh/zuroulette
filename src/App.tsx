@@ -302,225 +302,280 @@ function App() {
       <div className="flex min-h-screen flex-col bg-slate-50 text-zinc-800">
         <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
           <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
-        <header className="px-6 py-6 sm:px-8">
-          <div className="flex justify-center">
-            <h1 className="font-bold text-4xl leading-none sm:text-5xl text-center">
-              {title.trim() || TEXT.title}
-            </h1>
-          </div>
-        </header>
-
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
-          <section className="panel relative overflow-hidden px-5 py-6 sm:px-7 sm:py-7">
-            <div className="pointer-events-none relative mx-auto aspect-square w-full max-w-140 select-none">
-              <div className="absolute left-1/2 -top-1 z-20 -translate-x-1/2">
-                <div className="mx-auto -mt-1 h-0 w-0 border-x-18 border-t-34 border-x-transparent border-t-red-500 drop-shadow-lg" />
+            <header className="px-6 py-6 sm:px-8">
+              <div className="flex justify-center">
+                <h1 className="font-bold text-4xl leading-none sm:text-5xl text-center">
+                  {title.trim() || TEXT.title}
+                </h1>
               </div>
+            </header>
 
-              <div className="absolute inset-0 rounded-full bg-stone-200" />
+            <div className="grid gap-6">
+              <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_24rem]">
+                <section className="panel relative overflow-hidden px-5 py-6 sm:px-7 sm:py-7">
+                  <div className="pointer-events-none relative mx-auto aspect-square w-full max-w-140 select-none">
+                    <div className="absolute left-1/2 -top-1 z-20 -translate-x-1/2">
+                      <div className="mx-auto -mt-1 h-0 w-0 border-x-18 border-t-34 border-x-transparent border-t-red-500 drop-shadow-lg" />
+                    </div>
 
-              <div
-                className="absolute inset-0 overflow-hidden rounded-full"
-                style={{
-                  transform: `rotate(${rotation}deg)`,
-                  transitionProperty: "transform",
-                  transitionDuration: `${motion.durationMs}ms`,
-                  transitionTimingFunction: motion.easing,
-                }}
-              >
-                <svg
-                  className="absolute inset-0 h-full w-full"
-                  viewBox="0 0 100 100"
-                  aria-hidden="true"
-                >
-                  {items.map((item, index) => {
-                    const startAngle = index * segmentAngle;
-                    const endAngle = (index + 1) * segmentAngle;
+                    <div className="absolute inset-0 rounded-full bg-stone-200" />
 
-                    return (
-                      <path
-                        key={`${item.id}-slice`}
-                        d={describeSlicePath(startAngle, endAngle, 49)}
-                        fill={item.color}
-                        stroke="#ffffff"
-                        strokeWidth="0.5"
-                        strokeLinejoin="round"
-                      />
-                    );
-                  })}
-
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="49"
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth="0.5"
-                  />
-                </svg>
-
-                {items.map((item, index) => {
-                  const angle = index * segmentAngle + segmentAngle / 2;
-                  const radialRotation = angle - 90;
-                  const { x, y } = polarPosition(angle, 10);
-
-                  return (
                     <div
-                      key={item.id}
-                      className="absolute"
+                      className="absolute inset-0 overflow-hidden rounded-full"
                       style={{
-                        left: `${x}%`,
-                        top: `${y}%`,
-                        transform: "translateY(-50%)",
+                        transform: `rotate(${rotation}deg)`,
+                        transitionProperty: "transform",
+                        transitionDuration: `${motion.durationMs}ms`,
+                        transitionTimingFunction: motion.easing,
                       }}
                     >
-                      <div
-                        style={{
-                          transform: `rotate(${radialRotation}deg)`,
-                          transformOrigin: "left center",
-                        }}
+                      <svg
+                        className="absolute inset-0 h-full w-full"
+                        viewBox="0 0 100 100"
+                        aria-hidden="true"
                       >
-                        <div className="w-30 overflow-hidden text-ellipsis whitespace-nowrap rounded-full text-right font-black tracking-[0.12em] text-white sm:w-45 sm:text-xl">
-                          {getLabel(item, index)}
-                        </div>
-                      </div>
+                        {items.map((item, index) => {
+                          const startAngle = index * segmentAngle;
+                          const endAngle = (index + 1) * segmentAngle;
+
+                          return (
+                            <path
+                              key={`${item.id}-slice`}
+                              d={describeSlicePath(startAngle, endAngle, 49)}
+                              fill={item.color}
+                              stroke="#ffffff"
+                              strokeWidth="0.5"
+                              strokeLinejoin="round"
+                            />
+                          );
+                        })}
+
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="49"
+                          fill="none"
+                          stroke="#fff"
+                          strokeWidth="0.5"
+                        />
+                      </svg>
+
+                      {items.map((item, index) => {
+                        const angle = index * segmentAngle + segmentAngle / 2;
+                        const radialRotation = angle - 90;
+                        const { x, y } = polarPosition(angle, 10);
+
+                        return (
+                          <div
+                            key={item.id}
+                            className="absolute"
+                            style={{
+                              left: `${x}%`,
+                              top: `${y}%`,
+                              transform: "translateY(-50%)",
+                            }}
+                          >
+                            <div
+                              style={{
+                                transform: `rotate(${radialRotation}deg)`,
+                                transformOrigin: "left center",
+                              }}
+                            >
+                              <div className="w-30 overflow-hidden text-ellipsis whitespace-nowrap rounded-full text-right font-black tracking-[0.12em] text-white sm:w-45 sm:text-xl">
+                                {getLabel(item, index)}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
-                  );
-                })}
-              </div>
-              <div className="absolute inset-[45%] rounded-full bg-white shadow-xl" />
-            </div>
+                    <div className="absolute inset-[45%] rounded-full bg-white shadow-xl" />
+                  </div>
 
-            <div className="relative z-10 mt-6 flex justify-center">
-              <button
-                type="button"
-                onClick={spinRiggedWheel}
-                disabled={!canSpin}
-                className="action-button bg-slate-600 px-6 text-white hover:bg-slate-700 items-center gap-2 text-xl"
-              >
-                {isBusy ? null : <PlayIcon size={20} weight="fill" />}
+                  <div className="relative z-10 mt-6 flex justify-center">
+                    <button
+                      type="button"
+                      onClick={spinRiggedWheel}
+                      disabled={!canSpin}
+                      className="action-button bg-slate-600 px-6 text-white hover:bg-slate-700 items-center gap-2 text-xl"
+                    >
+                      {isBusy ? null : <PlayIcon size={20} weight="fill" />}
 
-                <span>
-                  {isSpinning
-                    ? TEXT.spinning
-                    : isResultPending
-                      ? TEXT.revealing
-                      : TEXT.spin}
-                </span>
-              </button>
-            </div>
-          </section>
+                      <span>
+                        {isSpinning
+                          ? TEXT.spinning
+                          : isResultPending
+                            ? TEXT.revealing
+                            : TEXT.spin}
+                      </span>
+                    </button>
+                  </div>
+                </section>
 
-          <aside className="grid gap-6">
-            <section className="panel px-5 py-6 sm:px-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between gap-3">
-                  <h2 className="text-xl font-bold">{TEXT.items}</h2>
-                </div>
+                <aside className="grid gap-6">
+                  <section className="panel px-5 py-6 sm:px-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <h2 className="text-xl font-bold">{TEXT.items}</h2>
+                      </div>
 
-                <div className="space-y-3">
-                  {items.map((item, index) => {
-                    return (
-                      <div className="flex items-center gap-3">
-                        <div className="min-w-0 flex-1">
-                          <input
-                            type="text"
-                            value={item.label}
-                            onChange={(event) =>
-                              updateItem(item.id, { label: event.target.value })
-                            }
-                            disabled={isBusy}
-                            className="field"
-                            placeholder={`${index + 1}`}
-                          />
-                        </div>
+                      <div className="space-y-3">
+                        {items.map((item, index) => {
+                          return (
+                            <div className="flex items-center gap-3">
+                              <div className="min-w-0 flex-1">
+                                <input
+                                  type="text"
+                                  value={item.label}
+                                  onChange={(event) =>
+                                    updateItem(item.id, {
+                                      label: event.target.value,
+                                    })
+                                  }
+                                  disabled={isBusy}
+                                  className="field"
+                                  placeholder={`${index + 1}`}
+                                />
+                              </div>
 
-                        <div className="shrink-0 size-8 aspect-square rounded-lg">
-                          <input
-                            type="color"
-                            className="size-full cursor-pointer appearance-none"
-                            value={item.color}
-                            onChange={(event) =>
-                              updateItem(item.id, { color: event.target.value })
-                            }
-                            disabled={isBusy}
-                            aria-label={`${getLabel(item, index)} ${TEXT.color}`}
-                          />
-                        </div>
+                              <div className="shrink-0 size-8 aspect-square rounded-lg">
+                                <input
+                                  type="color"
+                                  className="size-full cursor-pointer appearance-none"
+                                  value={item.color}
+                                  onChange={(event) =>
+                                    updateItem(item.id, {
+                                      color: event.target.value,
+                                    })
+                                  }
+                                  disabled={isBusy}
+                                  aria-label={`${getLabel(item, index)} ${TEXT.color}`}
+                                />
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => removeItem(item.id)}
+                                disabled={isBusy || items.length <= 2}
+                                className="action-button h-11 w-11 p-0 shrink-0 text-lg text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
+                                aria-label={`${getLabel(item, index)} ${TEXT.delete}`}
+                              >
+                                <TrashIcon size={24} />
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="mt-6 flex items-center justify-between">
+                        <button
+                          type="button"
+                          onClick={addItem}
+                          disabled={isBusy}
+                          className="action-button bg-slate-600 text-white hover:bg-slate-700 items-center gap-2"
+                        >
+                          <PlusIcon weight="bold" size={16} />
+                          <span>{TEXT.addItem}</span>
+                        </button>
 
                         <button
                           type="button"
-                          onClick={() => removeItem(item.id)}
-                          disabled={isBusy || items.length <= 2}
-                          className="action-button h-11 w-11 p-0 shrink-0 text-lg text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
-                          aria-label={`${getLabel(item, index)} ${TEXT.delete}`}
+                          onClick={resetItems}
+                          disabled={isBusy}
+                          className="action-button border border-stone-900/10 bg-white text-stone-700 hover:bg-stone-50"
                         >
-                          <TrashIcon size={24} />
+                          {TEXT.reset}
                         </button>
                       </div>
-                    );
-                  })}
-                </div>
-                <div className="mt-6 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={addItem}
-                    disabled={isBusy}
-                    className="action-button bg-slate-600 text-white hover:bg-slate-700 items-center gap-2"
-                  >
-                    <PlusIcon weight="bold" size={16} />
-                    <span>{TEXT.addItem}</span>
-                  </button>
 
-                  <button
-                    type="button"
-                    onClick={resetItems}
-                    disabled={isBusy}
-                    className="action-button border border-stone-900/10 bg-white text-stone-700 hover:bg-stone-50"
-                  >
-                    {TEXT.reset}
-                  </button>
-                </div>
-
+                      <div>
+                        <h2 className="text-xl font-bold">{TEXT.target}</h2>
+                        <div className="relative mt-2">
+                          <select
+                            value={targetId}
+                            onChange={(event) =>
+                              setTargetId(event.target.value)
+                            }
+                            disabled={isBusy}
+                            className="field appearance-none pr-11"
+                          >
+                            {items.map((item, index) => (
+                              <option key={item.id} value={item.id}>
+                                {getLabel(item, index)}
+                              </option>
+                            ))}
+                          </select>
+                          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-stone-400">
+                            <CaretDownIcon />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                  <section className="panel px-5 py-6 sm:px-6">
+                    <div>
+                      <h2 className="text-xl font-bold">タイトル</h2>
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          value={title}
+                          onChange={(event) => setTitle(event.target.value)}
+                          disabled={isBusy}
+                          className="field"
+                          placeholder={TEXT.title}
+                        />
+                      </div>
+                    </div>
+                  </section>
+                </aside>
+              </div>
+              <section className="panel px-5 py-6 sm:px-6">
+                <h2 className="text-xl font-bold">ズルーレットについて</h2>
                 <div>
-                  <h2 className="text-xl font-bold">{TEXT.target}</h2>
-                  <div className="relative mt-2">
-                    <select
-                      value={targetId}
-                      onChange={(event) => setTargetId(event.target.value)}
-                      disabled={isBusy}
-                      className="field appearance-none pr-11"
-                    >
-                      {items.map((item, index) => (
-                        <option key={item.id} value={item.id}>
-                          {getLabel(item, index)}
-                        </option>
-                      ))}
-                    </select>
-                    <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-stone-400">
-                      <CaretDownIcon />
-                    </span>
+                  <div className="mt-2.5 space-y-2.5">
+                    <p>
+                      ズルーレットは、露骨にズルいルーレットを誰でも簡単に作れるサービスです。
+                    </p>
+                    <p>
+                      YouTube配信や飲み会など、様々な場面でご利用いただけます。
+                    </p>
+                  </div>
+
+                  <div className="mt-6">
+                    <h3 className="text-lg font-bold">使い方</h3>
+                    <div className="mt-2.5 space-y-2.5">
+                      <p>
+                        最初から準備されている項目の名前を変更したり、項目を追加したりして、ルーレットをカスタマイズできます。
+                      </p>
+                      <p>
+                        項目名の右にある色アイコンを押すと、項目の色を変更できます。その右隣にあるゴミ箱ボタンを押すと、項目を削除できます。
+                      </p>
+                      <p>
+                        リセットボタンを押すと、入力内容がすべてリセットされ、初期状態に戻ります。
+                      </p>
+                      <p>
+                        タイトルを入力すると、画面上部に表示されているタイトルを「ズルーレット」から変更できます。
+                      </p>
+                      <p>
+                        スタートボタンを押すとルーレットが回転。一度フェイントをかけてから、ターゲット項目で停止します。
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <h3 className="text-lg font-bold">お問い合わせ</h3>
+                    <p className="mt-2.5">
+                      ご意見・ご要望は開発者X(
+                      <a
+                        href="https://x.com/ankyo_gh"
+                        className="hover:underline text-blue-500"
+                      >
+                        @ankyo_gh
+                      </a>
+                      )までご連絡ください。
+                    </p>
                   </div>
                 </div>
-              </div>
-            </section>
-            <section className="panel px-5 py-6 sm:px-6">
-              <div>
-                <h2 className="text-xl font-bold">タイトル</h2>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(event) => setTitle(event.target.value)}
-                    disabled={isBusy}
-                    className="field"
-                    placeholder={TEXT.title}
-                  />
-                </div>
-              </div>
-            </section>
-          </aside>
-          </div>
+              </section>
+            </div>
           </div>
         </main>
 
