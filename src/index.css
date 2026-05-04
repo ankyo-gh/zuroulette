@@ -1,1 +1,52 @@
 @import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+@layer base {
+  html {
+    background-color: #ffffff;
+    font-family: "Avenir Next", "Segoe UI", sans-serif;
+  }
+
+  body {
+    @apply min-h-screen bg-white text-zinc-800 antialiased;
+  }
+
+  #root {
+    @apply min-h-screen bg-white;
+  }
+
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  input[type="color"]::-webkit-color-swatch {
+    border: 0;
+    border-radius: 0.8rem;
+  }
+
+  input[type="color"]::-moz-color-swatch {
+    border: 0;
+    border-radius: 0.8rem;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply rounded-4xl bg-white shadow-lg;
+  }
+
+  .field {
+    @apply w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-400 focus:ring focus:ring-blue-400 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .action-button {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition duration-200 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+}
