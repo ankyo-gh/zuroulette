@@ -381,7 +381,7 @@ function App() {
                                 transformOrigin: "left center",
                               }}
                             >
-                              <div className="w-30 overflow-hidden text-ellipsis whitespace-nowrap rounded-full text-right font-black tracking-[0.12em] text-white sm:w-45 sm:text-xl">
+                              <div className="w-28 overflow-hidden text-ellipsis whitespace-nowrap rounded-full text-right font-black tracking-[0.12em] text-white sm:w-45 sm:text-xl">
                                 {getLabel(item, index)}
                               </div>
                             </div>
