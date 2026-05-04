@@ -111,6 +111,7 @@ function describeSlicePath(
 }
 
 function App() {
+  const [title, setTitle] = useState("");
   const [items, setItems] = useState<RouletteItem[]>(DEFAULT_ITEMS);
   const [targetId, setTargetId] = useState(DEFAULT_ITEMS[0].id);
   const [resultId, setResultId] = useState<string | null>(null);
@@ -252,8 +253,8 @@ function App() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
         <header className="px-6 py-6 sm:px-8">
           <div className="flex justify-center">
-            <h1 className="font-bold text-4xl leading-none sm:text-5xl">
-              {TEXT.title}
+            <h1 className="font-bold text-4xl leading-none sm:text-5xl text-center">
+              {title.trim() || TEXT.title}
             </h1>
           </div>
         </header>
@@ -353,97 +354,114 @@ function App() {
             </div>
           </section>
 
-          <aside className="panel px-5 py-6 sm:px-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-xl font-bold">{TEXT.items}</h2>
-              </div>
+          <aside className="grid gap-6">
+            <section className="panel px-5 py-6 sm:px-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-xl font-bold">{TEXT.items}</h2>
+                </div>
 
-              <div className="space-y-3">
-                {items.map((item, index) => {
-                  return (
-                    <div className="flex items-center gap-3">
-                      <div className="min-w-0 flex-1">
-                        <input
-                          type="text"
-                          value={item.label}
-                          onChange={(event) =>
-                            updateItem(item.id, { label: event.target.value })
-                          }
-                          disabled={isSpinning}
-                          className="field"
-                          placeholder={`${index + 1}`}
-                        />
+                <div className="space-y-3">
+                  {items.map((item, index) => {
+                    return (
+                      <div className="flex items-center gap-3">
+                        <div className="min-w-0 flex-1">
+                          <input
+                            type="text"
+                            value={item.label}
+                            onChange={(event) =>
+                              updateItem(item.id, { label: event.target.value })
+                            }
+                            disabled={isSpinning}
+                            className="field"
+                            placeholder={`${index + 1}`}
+                          />
+                        </div>
+
+                        <div className="shrink-0 size-8 aspect-square rounded-lg">
+                          <input
+                            type="color"
+                            className="size-full cursor-pointer appearance-none"
+                            value={item.color}
+                            onChange={(event) =>
+                              updateItem(item.id, { color: event.target.value })
+                            }
+                            disabled={isSpinning}
+                            aria-label={`${getLabel(item, index)} ${TEXT.color}`}
+                          />
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.id)}
+                          disabled={isSpinning || items.length <= 2}
+                          className="action-button h-11 w-11 p-0 shrink-0 text-lg text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
+                          aria-label={`${getLabel(item, index)} ${TEXT.delete}`}
+                        >
+                          <TrashIcon size={24} />
+                        </button>
                       </div>
-
-                      <div className="shrink-0 size-8 aspect-square rounded-lg">
-                        <input
-                          type="color"
-                          className="size-full cursor-pointer appearance-none"
-                          value={item.color}
-                          onChange={(event) =>
-                            updateItem(item.id, { color: event.target.value })
-                          }
-                          disabled={isSpinning}
-                          aria-label={`${getLabel(item, index)} ${TEXT.color}`}
-                        />
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => removeItem(item.id)}
-                        disabled={isSpinning || items.length <= 2}
-                        className="action-button h-11 w-11 p-0 shrink-0 text-lg text-zinc-500 hover:bg-zinc-50 hover:text-zinc-800"
-                        aria-label={`${getLabel(item, index)} ${TEXT.delete}`}
-                      >
-                        <TrashIcon size={24} />
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="mt-6 flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={addItem}
-                  disabled={isSpinning}
-                  className="action-button bg-slate-600 text-white hover:bg-slate-700 items-center gap-2"
-                >
-                  <PlusIcon weight="bold" size={16} />
-                  <span>{TEXT.addItem}</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={resetItems}
-                  disabled={isSpinning}
-                  className="action-button border border-stone-900/10 bg-white text-stone-700 hover:bg-stone-50"
-                >
-                  {TEXT.reset}
-                </button>
-              </div>
-
-              <div>
-                <h2 className="text-xl font-bold">{TEXT.target}</h2>
-                <div className="relative mt-2">
-                  <select
-                    value={targetId}
-                    onChange={(event) => setTargetId(event.target.value)}
+                    );
+                  })}
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <button
+                    type="button"
+                    onClick={addItem}
                     disabled={isSpinning}
-                    className="field appearance-none pr-11"
+                    className="action-button bg-slate-600 text-white hover:bg-slate-700 items-center gap-2"
                   >
-                    {items.map((item, index) => (
-                      <option key={item.id} value={item.id}>
-                        {getLabel(item, index)}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-stone-400">
-                    <CaretDownIcon />
-                  </span>
+                    <PlusIcon weight="bold" size={16} />
+                    <span>{TEXT.addItem}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetItems}
+                    disabled={isSpinning}
+                    className="action-button border border-stone-900/10 bg-white text-stone-700 hover:bg-stone-50"
+                  >
+                    {TEXT.reset}
+                  </button>
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-bold">{TEXT.target}</h2>
+                  <div className="relative mt-2">
+                    <select
+                      value={targetId}
+                      onChange={(event) => setTargetId(event.target.value)}
+                      disabled={isSpinning}
+                      className="field appearance-none pr-11"
+                    >
+                      {items.map((item, index) => (
+                        <option key={item.id} value={item.id}>
+                          {getLabel(item, index)}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-stone-400">
+                      <CaretDownIcon />
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </section>
+            <section className="panel px-5 py-6 sm:px-6">
+              <div>
+                <h2 className="text-xl font-bold">タイトル</h2>
+                <div className="mt-2">
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    disabled={isSpinning}
+                    className="field"
+                    placeholder={TEXT.title}
+                  />
+                </div>
+              </div>
+            </section>
           </aside>
         </div>
       </div>
