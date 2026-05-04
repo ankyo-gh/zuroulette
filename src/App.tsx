@@ -298,8 +298,10 @@ function App() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-8 text-zinc-800 sm:px-6 lg:px-8">
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
+    <>
+      <div className="flex min-h-screen flex-col bg-slate-50 text-zinc-800">
+        <main className="flex-1 px-4 py-8 sm:px-6 lg:px-8">
+          <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
         <header className="px-6 py-6 sm:px-8">
           <div className="flex justify-center">
             <h1 className="font-bold text-4xl leading-none sm:text-5xl text-center">
@@ -518,7 +520,13 @@ function App() {
               </div>
             </section>
           </aside>
-        </div>
+          </div>
+          </div>
+        </main>
+
+        <footer className="bg-slate-600 px-4 py-4 text-center text-sm text-white">
+          © 2026 ankyo
+        </footer>
       </div>
 
       {resultItem ? (
@@ -557,7 +565,7 @@ function App() {
           </div>
         </div>
       ) : null}
-    </main>
+    </>
   );
 }
 
